@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Aristotelian Thinking — Live Class</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0a0908;
+    --ink-2: #14110f;
+    --ink-3: #1c1a17;
+    --gold: #c8a96a;
+    --gold-bright: #e6c98b;
+    --gold-deep: #8a6f3c;
+    --bone: #ece4d2;
+    --bone-dim: #b9af9a;
+    --line: rgba(200, 169, 106, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: radial-gradient(ellipse at top, #161311 0%, #0a0908 55%, #050403 100%);
+    color: var(--bone);
+    font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.55;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Subtle parchment / film-grain noise overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.78  0 0 0 0 0.66  0 0 0 0 0.42  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Soft gold light rays from above */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(200,169,106,0.18) 0%, rgba(200,169,106,0) 60%),
+      radial-gradient(ellipse 60% 40% at 50% 110%, rgba(200,169,106,0.08) 0%, rgba(200,169,106,0) 60%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .vignette {
+    position: fixed;
+    inset: 0;
+    box-shadow: inset 0 0 220px 60px rgba(0,0,0,0.85);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  main {
+    position: relative;
+    z-index: 3;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 28px 80px;
+  }
+
+  /* — Top emblem — */
+  .crest {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .crest .symbol {
+    width: 54px;
+    height: 54px;
+    color: var(--gold);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 14px rgba(200,169,106,0.35));
+  }
+  .crest .order {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding-left: 0.5em;
+  }
+
+  /* — Greek meander rule — */
+  .meander {
+    height: 14px;
+    width: min(640px, 80%);
+    margin: 8px auto 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 14' fill='none' stroke='%23c8a96a' stroke-width='1.2'><path d='M0 1h12v8h-6v-4h-2v6h10V1h12v8h-6v-4h-2v6h10V1h12v8h-6v-4h-2v6h10V1h12v8h-6v-4h-2v6h10'/></svg>");
+    background-repeat: repeat-x;
+    background-size: auto 14px;
+    opacity: 0.55;
+  }
+
+  /* — Hero — */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 56px;
+    align-items: center;
+    margin-top: 56px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 0.45em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: "";
+    width: 36px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  h1.title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(38px, 5.4vw, 68px);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    color: var(--bone);
+    margin: 0 0 14px;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.6), 0 0 30px rgba(200,169,106,0.08);
+  }
+  h1.title .accent {
+    color: var(--gold-bright);
+    font-weight: 600;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    display: block;
+    font-size: 0.55em;
+    letter-spacing: 0.06em;
+    margin-top: 6px;
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    border: 1px solid var(--line);
+    padding: 8px 18px 8px 22px;
+    margin-top: 6px;
+    background: rgba(200,169,106,0.04);
+  }
+  .live-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d44a3a;
+    box-shadow: 0 0 10px #d44a3a, 0 0 22px rgba(212,74,58,0.5);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.85); }
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(22px, 2.4vw, 28px);
+    color: var(--bone-dim);
+    margin: 22px 0 14px;
+  }
+
+  .pitch {
+    font-size: clamp(20px, 1.9vw, 24px);
+    color: var(--bone);
+    line-height: 1.45;
+    margin: 12px 0 28px;
+    max-width: 540px;
+  }
+  .pitch b {
+    color: var(--gold-bright);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1.5px;
+  }
+  .pitch .u {
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1.5px;
+  }
+
+  /* — Bust panel — */
+  .bust {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(200,169,106,0.18), transparent 60%),
+      linear-gradient(180deg, #0e0c0a 0%, #050403 100%);
+    box-shadow:
+      0 0 0 1px rgba(200,169,106,0.08),
+      0 30px 80px rgba(0,0,0,0.7),
+      inset 0 0 80px rgba(0,0,0,0.6);
+  }
+  .bust::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(200,169,106,0.18);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .bust img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    filter: grayscale(0.35) contrast(1.05) brightness(0.9) sepia(0.08);
+    z-index: 1;
+  }
+  .bust::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%),
+      linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(10,9,8,0.6) 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .bust .seal {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    text-align: center;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.5em;
+    opacity: 0.85;
+  }
+  .bust .seal .greek {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: var(--bone-dim);
+    margin-top: 6px;
+    opacity: 0.75;
+  }
+
+  /* — Card / Form — */
+  .scroll {
+    margin: 72px auto 0;
+    max-width: 640px;
+    position: relative;
+    background:
+      linear-gradient(180deg, rgba(28,26,23,0.92), rgba(14,12,10,0.92));
+    border: 1px solid var(--line);
+    padding: 48px 44px 40px;
+    box-shadow:
+      0 0 0 1px rgba(200,169,106,0.06),
+      0 40px 100px rgba(0,0,0,0.7),
+      inset 0 0 60px rgba(0,0,0,0.4);
+  }
+  .scroll::before, .scroll::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--gold);
+    opacity: 0.7;
+  }
+  .scroll::before { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .scroll::after { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+  .scroll-corner-tr,
+  .scroll-corner-bl {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--gold);
+    opacity: 0.7;
+  }
+  .scroll-corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+  .scroll-corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+
+  .scroll h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.32em;
+    text-align: center;
+    color: var(--gold);
+    margin: 0 0 6px;
+    text-transform: uppercase;
+  }
+  .scroll .small {
+    text-align: center;
+    color: var(--bone-dim);
+    font-style: italic;
+    font-size: 16px;
+    margin-bottom: 28px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .field { position: relative; }
+  .field label {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  .field input {
+    width: 100%;
+    background: rgba(10,9,8,0.85);
+    border: 1px solid rgba(200,169,106,0.25);
+    color: var(--bone);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    padding: 32px 16px 12px;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+  .field input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold), 0 0 22px rgba(200,169,106,0.18);
+    background: rgba(20,17,15,0.95);
+  }
+  .field input::placeholder { color: rgba(185,175,154,0.4); }
+
+  button.cta {
+    margin-top: 8px;
+    background: linear-gradient(180deg, #d8b87a 0%, #c8a96a 45%, #8a6f3c 100%);
+    color: #0a0908;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    padding: 18px 22px;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    box-shadow:
+      0 0 0 1px rgba(200,169,106,0.5),
+      0 14px 40px rgba(0,0,0,0.55),
+      inset 0 1px 0 rgba(255,235,180,0.5);
+    transition: transform 0.15s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  }
+  button.cta:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+    box-shadow:
+      0 0 0 1px var(--gold-bright),
+      0 18px 50px rgba(0,0,0,0.6),
+      0 0 30px rgba(230,201,139,0.25),
+      inset 0 1px 0 rgba(255,235,180,0.6);
+  }
+  button.cta:active { transform: translateY(0); }
+
+  /* — Footnotes — */
+  .notes {
+    max-width: 760px;
+    margin: 48px auto 0;
+    padding: 0 8px;
+  }
+  .notes p {
+    color: var(--bone);
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-style: italic;
+    margin: 22px 0;
+    line-height: 1.55;
+  }
+  .notes p .star {
+    color: var(--gold);
+    font-style: normal;
+    margin-right: 6px;
+    font-size: 1.1em;
+  }
+  .notes p .u {
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+    color: var(--bone);
+  }
+  .notes p .free {
+    color: var(--gold-bright);
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+  }
+
+  /* — Footer — */
+  footer {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 60px 20px 30px;
+    color: rgba(185,175,154,0.5);
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+  }
+  footer .lockup { display: inline-flex; align-items: center; gap: 14px; }
+  footer .lockup::before, footer .lockup::after {
+    content: "";
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.7;
+  }
+
+  /* — Success state — */
+  .success {
+    display: none;
+    text-align: center;
+    padding: 24px 0 8px;
+  }
+  .success.show { display: block; animation: fade 0.6s ease both; }
+  .success h3 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    font-size: 16px;
+    margin: 0 0 10px;
+  }
+  .success p {
+    color: var(--bone);
+    font-style: italic;
+    font-size: 18px;
+    margin: 0;
+  }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+
+  /* — Reveal on load — */
+  .reveal { opacity: 0; transform: translateY(14px); animation: reveal 1s ease 0.1s forwards; }
+  .reveal.d2 { animation-delay: 0.25s; }
+  .reveal.d3 { animation-delay: 0.45s; }
+  .reveal.d4 { animation-delay: 0.65s; }
+  @keyframes reveal { to { opacity: 1; transform: none; } }
+
+  @media (max-width: 880px) {
+    .hero { grid-template-columns: 1fr; gap: 32px; }
+    .bust { max-width: 420px; margin: 0 auto; aspect-ratio: 4/5; }
+    main { padding: 36px 20px 60px; }
+    .scroll { padding: 38px 26px 32px; }
+  }
+</style>
+</head>
+<body>
+  <div class="vignette"></div>
+
+  <main>
+    <!-- Crest -->
+    <div class="crest reveal">
+      <svg class="symbol" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2">
+        <circle cx="32" cy="32" r="28" />
+        <circle cx="32" cy="32" r="20" opacity="0.6" />
+        <path d="M32 8 L36 28 L56 32 L36 36 L32 56 L28 36 L8 32 L28 28 Z" fill="currentColor" opacity="0.55" stroke="none"/>
+        <circle cx="32" cy="32" r="3" fill="currentColor" stroke="none"/>
+      </svg>
+      <div class="meander"></div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div>
+        <h1 class="title reveal d2">
+          The Aristotelian<br/>Thinking
+        </h1>
+        <div class="live-badge reveal d3"><span class="dot"></span>Live Class</div>
+        <div class="subtitle reveal d3">Begins next week.</div>
+
+        <p class="pitch reveal d4">
+          <b>Sign up NOW</b> to <span class="u">save your seat</span>.<br/>
+          This class <span class="u">will fill up</span>.
+        </p>
+      </div>
+
+      <div class="bust reveal d3">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Aristotle_Altemps_Inv8575.jpg/800px-Aristotle_Altemps_Inv8575.jpg" alt="Marble bust of Aristotle, Palazzo Altemps, Rome" referrerpolicy="no-referrer" />
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section class="scroll reveal d4" aria-labelledby="claimSeat">
+      <span class="scroll-corner-tr"></span>
+      <span class="scroll-corner-bl"></span>
+      <h2 id="claimSeat">Claim Your Seat</h2>
+      <p class="small">Doors close once the chamber is full.</p>
+
+      <form id="signupForm" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required placeholder=" " />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required placeholder=" " />
+        </div>
+        <button type="submit" class="cta">Reserve My Seat</button>
+      </form>
+
+      <div class="success" id="success" role="status" aria-live="polite">
+        <h3>The Threshold Opens</h3>
+        <p>Your seat is reserved. Watch your inbox — your Zoom ticket arrives shortly.</p>
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <div class="notes reveal d4">
+      <p>
+        <span class="star">*</span><em>Note:</em> We will email your Zoom ticket, time, date and confirmation
+        <span class="u">to save your seat</span>.
+      </p>
+      <p>
+        <span class="star">*</span><em>Note:</em> Since you came from my video,
+        your seat is <span class="free">FREE of charge.</span>
+      </p>
+    </div>
+  </main>
+
+<script>
+  // Form submission — graceful fake submit (no backend wired)
+  const form = document.getElementById('signupForm');
+  const success = document.getElementById('success');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    if (!name || !/^\S+@\S+\.\S+$/.test(email)) {
+      // simple inline validation cue
+      [form.name, form.email].forEach(f => {
+        if (!f.value.trim() || (f.type === 'email' && !/^\S+@\S+\.\S+$/.test(f.value))) {
+          f.style.borderColor = '#d44a3a';
+          f.style.boxShadow = '0 0 0 1px #d44a3a';
+          setTimeout(() => { f.style.borderColor=''; f.style.boxShadow=''; }, 1800);
+        }
+      });
+      return;
+    }
+    form.style.display = 'none';
+    success.classList.add('show');
+  });
+</script>
+</body>
+</html>
